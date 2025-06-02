@@ -1,8 +1,8 @@
 # Todo API
 
-一个基于 Spring Boot 的待办事项 RESTful API 服务。
+A RESTful API for managing todo items built with Spring Boot.
 
-## 技术栈
+## Technology Stack
 
 - Java 8+
 - Spring Boot 2.7.x
@@ -10,153 +10,222 @@
 - MySQL
 - Maven
 - Lombok
+- Swagger/OpenAPI 3.0
 
-## 功能特性
+## Features
 
-- 待办事项的增删改查
-- 按完成状态筛选待办事项
-- 参数验证
-- 统一异常处理
-- RESTful API 设计
+- CRUD operations for todo items
+- Filter todos by completion status
+- Parameter validation
+- Unified exception handling
+- RESTful design
+- Swagger API documentation
+- Standardized API response format
 
-## API 文档
+## Swagger Documentation
 
-### 获取所有待办事项
-```http
+The project uses SpringDoc OpenAPI (Swagger) for API documentation. The documentation is automatically generated from the code annotations.
+
+### Accessing Swagger UI
+
+You can access the Swagger UI interface at:
+```
+Swagger UI: http://localhost:8080/swagger-ui.html
+OpenAPI JSON: http://localhost:8080/api-docs
+OpenAPI YAML: http://localhost:8080/api-docs.yaml
+
+```
+
+### Swagger Configuration
+
+The Swagger configuration is defined in `OpenApiConfig.java` and includes:
+- API title and description
+- Version information
+- Contact details
+- License information
+- Server configuration
+
+### Available Documentation
+
+The Swagger UI provides:
+- Interactive API documentation
+- Request/response schemas
+- Example requests
+- Try-it-out functionality
+- Authentication information (if configured)
+
+### API Documentation Features
+
+- Detailed endpoint descriptions
+- Request/response examples
+- Parameter validation rules
+- Response codes and meanings
+- Data models and schemas
+
+## API Documentation
+
+The API documentation is available through Swagger UI at:
+```
+http://localhost:8080/swagger-ui.html
+```
+
+### API Response Format
+
+All API responses follow a standardized format:
+
+```json
+{
+    "status": 200,
+    "message": "Success",
+    "data": {
+        // Response data
+    },
+    "timestamp": "2024-01-01T12:00:00"
+}
+```
+
+### Available Endpoints
+
+#### Get All Todos
+```bash
 GET /api/todos
 ```
 
-### 获取单个待办事项
-```http
+#### Get Todo by ID
+```bash
 GET /api/todos/{id}
 ```
 
-### 创建待办事项
-```http
+#### Create Todo
+```bash
 POST /api/todos
 Content-Type: application/json
 
 {
-    "title": "完成项目",
-    "description": "完成Todo API项目开发"
+    "title": "Complete project",
+    "description": "Finish the todo API project",
+    "completed": false
 }
 ```
 
-### 更新待办事项
-```http
+#### Update Todo
+```bash
 PUT /api/todos/{id}
 Content-Type: application/json
 
 {
-    "title": "更新后的标题",
-    "description": "更新后的描述",
+    "title": "Updated title",
+    "description": "Updated description",
     "completed": true
 }
 ```
 
-### 删除待办事项
-```http
+#### Delete Todo
+```bash
 DELETE /api/todos/{id}
 ```
 
-### 按状态筛选待办事项
-```http
+#### Filter Todos by Status
+```bash
 GET /api/todos/status?completed=true
 ```
 
-## 项目结构
+## Project Structure
 
 ```
 src/main/java/com/example/todoapi/
-├── controller/          # 控制器层
-├── service/            # 服务层
-├── repository/         # 数据访问层
-├── entity/            # 实体类
-├── dto/               # 数据传输对象
-└── exception/         # 异常处理
+├── config/          # Configuration classes
+├── controller/      # REST controllers
+├── dto/            # Data Transfer Objects
+├── entity/         # JPA entities
+├── exception/      # Custom exceptions
+├── repository/     # JPA repositories
+└── service/        # Business logic
 ```
 
-## 运行项目
+## Getting Started
 
-1. 克隆项目
-```bash
-git clone [项目地址]
-```
+### Prerequisites
 
-2. 配置数据库
-编辑 `application.properties` 文件，配置数据库连接信息：
+- Java 8 or higher
+- Maven
+- MySQL
+
+### Database Configuration
+
+Configure your database connection in `application.properties`:
+
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/todo_db
 spring.datasource.username=your_username
 spring.datasource.password=your_password
 ```
 
-3. 构建项目
+### Building the Project
+
 ```bash
 mvn clean install
 ```
 
-4. 运行项目
+### Running the Application
+
 ```bash
 mvn spring-boot:run
 ```
 
-## 错误处理
+The application will start on port 8080.
 
-API 使用统一的错误响应格式：
+## Error Handling
 
-```json
-{
-    "status": 400,
-    "message": "错误信息",
-    "timestamp": "2024-01-01T12:00:00"
-}
-```
-
-验证错误响应格式：
+The API uses a standardized error response format:
 
 ```json
 {
     "status": 400,
-    "message": "Validation failed",
-    "errors": {
-        "fieldName": "错误信息"
-    },
+    "message": "Error message",
+    "data": null,
     "timestamp": "2024-01-01T12:00:00"
 }
 ```
 
-## 测试功能
+Common HTTP status codes:
+- 200: Success
+- 201: Created
+- 400: Bad Request
+- 404: Not Found
+- 500: Internal Server Error
 
-启动应用后，可以用以下方式测试：
+## Testing Functionality
 
-使用curl命令：
-```json
-# 创建TODO
+After starting the application, you can test it using the following methods:
+
+Using curl commands:
+```bash
+# Create a TODO
 curl -X POST http://localhost:8080/api/todos \
   -H "Content-Type: application/json" \
-  -d '{"title":"学习Spring Boot","description":"完成TODO List项目"}'
+  -d '{"title":"Learn Spring Boot","description":"Complete TODO List project"}'
 
-# 获取所有TODO
+# Get all TODOs
 curl http://localhost:8080/api/todos
 
-# 更新TODO状态
+# Update TODO status
 curl -X PUT http://localhost:8080/api/todos/1 \
   -H "Content-Type: application/json" \
-  -d '{"title":"学习Spring Boot","description":"完成TODO List项目","completed":true}'
+  -d '{"title":"Learn Spring Boot","description":"Complete TODO List project","completed":true}'
 ```
 
-## H2 数据库
+## H2 Database
 
-访问H2控制台：
+Access the H2 console:
 
-```json
+```bash
 URL: http://localhost:8080/h2-console
 JDBC URL: jdbc:h2:mem:testdb
-用户名: sa
-密码: （空）
+Username: sa
+Password: (empty)
 ```
 
-## 许可证
+## License
 
-MIT License 
+This project is licensed under the MIT License. 
